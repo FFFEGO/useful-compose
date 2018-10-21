@@ -1,4 +1,4 @@
-version: '3'
+version: '2'
 
 services:
   elasticsearch:
@@ -15,6 +15,7 @@ services:
       - esdata:/usr/share/elasticsearch/data
     networks:
       - esnet
+    mem_limit: 512m
  
   kibana:
     image: docker.elastic.co/kibana/kibana:6.4.2
@@ -25,16 +26,20 @@ services:
       - esnet
     depends_on:
       - elasticsearch
+    mem_limit: 256m
 
   logstash:
     image: docker.elastic.co/logstash/logstash:6.4.2
     container_name: logstash
+    environment:
+      - "LS_JAVA_OPTS=-Xms256m -Xmx256m"
     # volumes:
     #   - ./pipeline.conf:/usr/share/logstash/pipeline/pipeline.conf
     networks:
       - esnet
     depends_on:
       - elasticsearch
+    mem_limit: 512m
 
 volumes:
   esdata:
