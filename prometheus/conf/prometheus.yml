@@ -16,4 +16,4 @@ scrape_configs:
   - job_name: 'node'
     scrape_interval: '15s'
     static_configs:
-      - targets: ['localhost:9100']
+      - targets: ['exporter:9100']
