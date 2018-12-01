@@ -1,36 +1,35 @@
 version: '3'
 services:
   prom:
-    image: prom/prometheus:latest
-    container_name: prom
-    volumes:
-      - ./conf/prometheus.yml:/etc/prometheus/prometheus.yml
+    image: 'prom/prometheus:latest'
+    container_name: 'prom'
     command: '--config.file=/etc/prometheus/prometheus.yml --storage.tsdb.path=/prometheus'
     ports:
-      - 127.0.0.1:9090:9090
+      - '127.0.0.1:9090:9090'
     volumes:
-      - prom:/prometheus
+      - './conf/prometheus.yml:/etc/prometheus/prometheus.yml'
+      - 'prom:/prometheus'
     depends_on:
-      - exporter
+      - 'exporter'
 
   exporter:
-    image: prom/node-exporter:latest
-    container_name: exporter
+    image: 'prom/node-exporter:latest'
+    container_name: 'exporter'
     ports:
-      - 127.0.0.1:9100:9100
+      - '127.0.0.1:9100:9100'
 
   grafana:
-    image: grafana/grafana:latest
-    container_name: grafana
+    image: 'grafana/grafana:latest'
+    container_name: 'grafana'
     ports:
-      - 3000:3000
+      - '3000:3000'
     volumes:
-      - grafana:/var/lib/grafana
+      - 'grafana:/var/lib/grafana'
     depends_on:
-      - prom
+      - 'prom'
 
 volumes:
   prom:
-    driver: local
+    driver: 'local'
   grafana:
-    driver: local
+    driver: 'local'
