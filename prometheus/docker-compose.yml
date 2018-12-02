@@ -24,7 +24,7 @@ services:
   mtail:
     build:
       context: 'https://github.com/google/mtail.git'
-      image: 'mtail:latest'
+    image: 'mtail:latest'
     container_name: 'mtail'
     restart: 'always'
     command: "--logtostderr --progs /mtail/progs --logs ${MTAIL_CONTAINER_LOGS_PATH}"
