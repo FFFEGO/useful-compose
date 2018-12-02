@@ -3,24 +3,41 @@ services:
   prom:
     image: 'prom/prometheus:latest'
     container_name: 'prom'
+    restart: 'always'
     command: '--config.file=/etc/prometheus/prometheus.yml --storage.tsdb.path=/prometheus'
     ports:
       - '127.0.0.1:9090:9090'
     volumes:
-      - './conf/prometheus.yml:/etc/prometheus/prometheus.yml'
+      - "${PROM_CONF_PATH}:/etc/prometheus/prometheus.yml"
       - 'prom:/prometheus'
     depends_on:
       - 'exporter'
+      - 'mtail'
 
   exporter:
     image: 'prom/node-exporter:latest'
     container_name: 'exporter'
+    restart: 'always'
     ports:
       - '127.0.0.1:9100:9100'
+
+  mtail:
+    build:
+      context: 'https://github.com/google/mtail.git'
+      image: 'mtail:latest'
+    container_name: 'mtail'
+    restart: 'always'
+    command: "--logtostderr --progs /mtail/progs --logs ${MTAIL_CONTAINER_LOGS_PATH}"
+    ports:
+      - '127.0.0.1:3903:3903'
+    volumes:
+      - "${MTAIL_PROGS_PATH}:/mtail/progs"
+      - "${MTAIL_HOST_LOGS_PATH}:${MTAIL_CONTAINER_LOGS_PATH}"
 
   grafana:
     image: 'grafana/grafana:latest'
     container_name: 'grafana'
+    restart: 'always'
     ports:
       - '3000:3000'
     volumes:
